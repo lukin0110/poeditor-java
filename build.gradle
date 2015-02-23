@@ -1,15 +1,3 @@
-/**
- * Publish the jar file to maven
- * - new: https://gradle.org/docs/current/userguide/publishing_maven.html
- * - current: http://gradle.org/docs/current/userguide/artifact_management.html
- * 
- * - new: gradle publish
- * - new local: gradle publishToMavenLocal
- * - current: gradle uploadArchives
- * 
- * Prepare to publish to Maven central:
- * - http://central.sonatype.org/pages/gradle.html
- */
 apply plugin: 'java'
 apply plugin: 'maven'
 apply plugin: 'signing'
@@ -17,17 +5,11 @@ apply plugin: 'maven-publish'
 
 // Artifact settings
 group = 'be.lukin.poeditor'
-version = '0.0.1'
+version = '0.1.0'
 archivesBaseName = 'poeditor-client'
 
-// Signing settings
-//signing.keyId = 'YourKeyId'
-//signing.password = 'YourPublicKeyPassword'
-//signing.secretKeyRingFile = 'PathToYourKeyRingFile'
-
-// Publish settings
-def ossrhUsername = 'your-jira-id'
-def ossrhPassword = 'your-jira-password'
+def _name = 'POEditor API Client'
+def _description = 'API Client for the POEditor API'
 
 repositories {
     mavenCentral()
@@ -55,25 +37,54 @@ artifacts {
     archives javadocJar, sourcesJar
 }
 
-//signing {
-//    sign configurations.archives
-//}
+signing {
+    sign configurations.archives
+}
 
+/**
+ * New way of publishing, not used for now:)
+ */
 publishing {
     publications {
         maven(MavenPublication) {
-            groupId 'be.lukin.poeditor'
-            artifactId 'poeditor-client'
-            version '0.0.1'
+            groupId group
+            artifactId archivesBaseName
+            version version
 
             from components.java
 
             pom.withXml {
-                asNode().appendNode('description', 'API Client for the POEditor API')
+                // http://forums.gradle.org/gradle/topics/maven_publishing_plugin_doesnt_upload_generated_pom_file
+                def root = asNode()
+                
+                root.appendNode('name', _name);
+                root.appendNode('description', _description)
+                root.appendNode('url', 'https://github.com/lukin0110/poeditor-java/')
+                root.appendNode('inceptionYear', '2015')
+                
+                def scm = root.appendNode('scm')
+                scm.appendNode('url', 'https://github.com/lukin0110/poeditor-java/')
+                scm.appendNode('connection', 'scm:git:https://github.com/lukin0110/poeditor-java.git')
+                scm.appendNode('developerConnection', 'scm:git:https://github.com/lukin0110/poeditor-java.git')
+
+                def license = root.appendNode('licenses').appendNode('license')
+                license.appendNode('name', 'The Apache Software License, Version 2.0')
+                license.appendNode('url', 'http://www.apache.org/licenses/LICENSE-2.0.txt')
+                //license.appendNode('distribution', 'repo')
+
+                def developer = root.appendNode('developers').appendNode('developer')
+                developer.appendNode('id', 'lukin0110')
+                developer.appendNode('name', 'Maarten Huijsmans')
+                developer.appendNode('email', 'maarten@lukin.be')
+                
+                def issues = root.appendNode('issueManagement')
+                issues.appendNode('system', 'GitHub issues')
+                issues.appendNode('url', 'https://github.com/lukin0110/poeditor-java/issues')
             }
         }
     }
 }
+
 
 /**
  * Defining the repo to publish to
@@ -87,6 +98,9 @@ publishing {
     }
 }
 
+/**
+ * Old way of publishing, but still needed
+ */
 uploadArchives {
     repositories {
         mavenDeployer {
@@ -101,16 +115,16 @@ uploadArchives {
             }
 
             pom.project {
-                name 'poeditor-java'
+                name _name
                 packaging 'jar'
-                artifactId 'poeditor-client'
-                description 'API Client for the POEditor API'
-                url 'https://github.com/lukin0110/java-poeditor/'
+                artifactId archivesBaseName
+                description _description
+                url 'https://github.com/lukin0110/poeditor-java/'
 
                 scm {
-                    connection 'scm:git:https://github.com/lukin0110/java-poeditor/'
-                    developerConnection 'scm:git:https://github.com/lukin0110/java-poeditor/'
-                    url 'https://github.com/lukin0110/java-poeditor/'
+                    url 'https://github.com/lukin0110/poeditor-java/'
+                    connection 'scm:https://github.com/lukin0110/poeditor-java.git'
+                    developerConnection 'scm:git://github.com/lukin0110/poeditor-java.git'
                 }
 
                 licenses {

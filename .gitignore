@@ -20,3 +20,4 @@ tmp-*.xml
 *.iml
 
 src/test/resources/config.properties
+gradle.properties
