@@ -9,9 +9,9 @@ Download
 Grab via maven:
 ```xml
 <dependency>
-  <groupId>com.squareup.retrofit</groupId>
-  <artifactId>retrofit</artifactId>
-  <version>1.9.0</version>
+  <groupId>be.lukin.poeditor</groupId>
+  <artifactId>poeditor-client</artifactId>
+  <version>0.1.0</version>
 </dependency>
 ```
 or gradle:
