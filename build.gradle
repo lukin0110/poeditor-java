@@ -1,0 +1,133 @@
+/**
+ * Publish the jar file to maven
+ * - new: https://gradle.org/docs/current/userguide/publishing_maven.html
+ * - current: http://gradle.org/docs/current/userguide/artifact_management.html
+ * 
+ * - new: gradle publish
+ * - new local: gradle publishToMavenLocal
+ * - current: gradle uploadArchives
+ * 
+ * Prepare to publish to Maven central:
+ * - http://central.sonatype.org/pages/gradle.html
+ */
+apply plugin: 'java'
+apply plugin: 'maven'
+apply plugin: 'signing'
+apply plugin: 'maven-publish'
+
+// Artifact settings
+group = 'be.lukin.poeditor'
+version = '0.0.1'
+archivesBaseName = 'poeditor-client'
+
+// Signing settings
+//signing.keyId = 'YourKeyId'
+//signing.password = 'YourPublicKeyPassword'
+//signing.secretKeyRingFile = 'PathToYourKeyRingFile'
+
+// Publish settings
+def ossrhUsername = 'your-jira-id'
+def ossrhPassword = 'your-jira-password'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile 'com.squareup.retrofit:retrofit:1.9.0'
+    compile 'com.squareup.okhttp:okhttp-urlconnection:2.0.0'
+    compile 'com.squareup.okhttp:okhttp:2.0.0'
+
+    testCompile group: 'junit', name: 'junit', version: '4.11'
+}
+
+task javadocJar(type: Jar) {
+    classifier = 'javadoc'
+    from javadoc
+}
+
+task sourcesJar(type: Jar) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+//artifacts {
+//    archives javadocJar, sourcesJar
+//}
+//
+//signing {
+//    sign configurations.archives
+//}
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            groupId 'be.lukin.poeditor'
+            artifactId 'poeditor-client'
+            version '0.0.1'
+
+            from components.java
+
+            pom.withXml {
+                asNode().appendNode('description', 'API Client for the POEditor API')
+            }
+        }
+    }
+}
+
+/**
+ * Defining the repo to publish to
+ */
+publishing {
+    repositories {
+        maven {
+            // change to point to your repo, e.g. http://my.org/repo
+            url "$buildDir/repo"
+        }
+    }
+}
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+            repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+                authentication(userName: ossrhUsername, password: ossrhPassword)
+            }
+
+            snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
+                authentication(userName: ossrhUsername, password: ossrhPassword)
+            }
+
+            pom.project {
+                name 'java-poeditor'
+                packaging 'jar'
+                artifactId 'poeditor-client'
+                description 'API Client for the POEditor API'
+                url 'https://github.com/lukin0110/java-poeditor/'
+
+                scm {
+                    connection 'scm:git:https://github.com/lukin0110/java-poeditor/'
+                    developerConnection 'scm:git:https://github.com/lukin0110/java-poeditor/'
+                    url 'https://github.com/lukin0110/java-poeditor/'
+                }
+
+                licenses {
+                    license {
+                        name 'The Apache License, Version 2.0'
+                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+
+                developers {
+                    developer {
+                        id 'lukin0110'
+                        name 'Maarten Huijsmans'
+                        email 'maarten@lukin.be'
+                    }
+                }
+            }
+        }
+    }
+}
