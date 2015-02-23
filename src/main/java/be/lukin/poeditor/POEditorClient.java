@@ -150,8 +150,8 @@ public class POEditorClient {
      * @return
      */
     public boolean addAdministrator(String projectId, String name, String email){
-        Response response = service.addProjectMember(Action.ADD_CONTRIBUTOR, apiKey, projectId, name, email, null, 1);
-        return "200".equals(response.code);
+        ResponseWrapper wrapper = service.addProjectMember(Action.ADD_CONTRIBUTOR, apiKey, projectId, name, email, null, 1);
+        return "200".equals(wrapper.response.code);
     }
 
     /**
@@ -166,8 +166,8 @@ public class POEditorClient {
      * @return
      */
     public boolean addContributor(String projectId, String name, String email, String language){
-        Response response = service.addProjectMember(Action.ADD_CONTRIBUTOR, apiKey, projectId, name, email, language, 0);
-        return "200".equals(response.code);
+        ResponseWrapper wrapper = service.addProjectMember(Action.ADD_CONTRIBUTOR, apiKey, projectId, name, email, language, 0);
+        return "200".equals(wrapper.response.code);
     }
 
     public TermsDetails addTerms(String projectId, List<Term> terms){
@@ -223,5 +223,13 @@ public class POEditorClient {
     public List<Term> viewTerms(String projectId){
         ViewTermsResponse response = service.viewProjectTerms(Action.VIEW_TERMS, apiKey, projectId, null);
         return response.list;
+    }
+
+    @Override
+    public String toString() {
+        return "POEditorClient{" +
+                "endpoint='" + endpoint + '\'' +
+                ", apiKey='" + apiKey + '\'' +
+                '}';
     }
 }

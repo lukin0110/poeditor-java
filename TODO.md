@@ -1,8 +1,7 @@
 # Todo
 
-- local gradle test project
-- setup unit tests
 - prepare for maven central: pom info, javadocs, apply form
+- local gradle test project
 - make apiary stub
 
 - implement all api calls

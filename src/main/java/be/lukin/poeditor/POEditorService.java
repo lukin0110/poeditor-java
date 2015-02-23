@@ -74,7 +74,7 @@ public interface POEditorService {
   
     @FormUrlEncoded
     @POST("/")
-    public Response addProjectMember(
+    public ResponseWrapper addProjectMember(
             @Field("action") String action,
             @Field("api_token") String token,
             @Field("id") String projectId,
