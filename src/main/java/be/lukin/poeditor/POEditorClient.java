@@ -33,6 +33,7 @@ public class POEditorClient {
         public static final String LIST_CONTRIBUTORS = "list_contributors";
         public static final String ADD_CONTRIBUTOR = "add_contributor";
         public static final String ADD_TERMS = "add_terms";
+        public static final String DELETE_TERMS = "delete_terms";
         public static final String ADD_LANGUAGE = "add_language";
         public static final String DELETE_LANGUAGE = "delete_language";
         public static final String SET_REFERENCE_LANGUAGE = "set_reference_language";
@@ -171,8 +172,14 @@ public class POEditorClient {
 
     public TermsDetails addTerms(String projectId, List<Term> terms){
         String jsonTerms = new Gson().toJson(terms);
-        AddTermsResponse atr = service.addTerms(Action.ADD_TERMS, apiKey, projectId, jsonTerms);
+        EditTermsResponse atr = service.editTerms(Action.ADD_TERMS, apiKey, projectId, jsonTerms);
         return atr.details;
+    }
+    
+    public TermsDetails deleteTerms(String projectId, List<Term> terms){
+        String jsonTerms = new Gson().toJson(terms);
+        EditTermsResponse etr = service.editTerms(Action.DELETE_TERMS, apiKey, projectId, jsonTerms);
+        return etr.details;
     }
 
     public File export(String projectId, String language, FileTypeEnum fte, FileTypeEnum[] filters){

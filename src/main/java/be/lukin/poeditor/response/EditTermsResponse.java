@@ -3,7 +3,7 @@ package be.lukin.poeditor.response;
 import be.lukin.poeditor.models.Response;
 import be.lukin.poeditor.models.TermsDetails;
 
-public class AddTermsResponse {
+public class EditTermsResponse {
 
     public Response response;
     public TermsDetails details;

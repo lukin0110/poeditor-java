@@ -37,14 +37,15 @@ public class Main {
         //File file = client.export("29135", "nl", FileTypeEnum.ANDROID_STRINGS, null, exportedFile);
         //System.out.println(file.getAbsolutePath());
 
-        //List<Term> terms = new ArrayList<Term>();
-        //terms.add(new Term("test_mh"));
-        //terms.add(new Term("test_mh2"));
-        //client.addTerms(projectId, terms);
-
+        List<Term> terms = new ArrayList<Term>();
+        terms.add(new Term("test_mh"));
+        terms.add(new Term("test_mh2"));
+        System.out.println("Add terms: " + client.addTerms(projectId, terms));
+        System.out.println("Delete terms: " + client.deleteTerms(projectId, terms));
+        
         //System.out.println("Add German :" + client.addProjectLanguage(projectId, "de"));
         //System.out.println("Create Project: " + client.createProject("Butsing"));
-        System.out.println("Terms: " + client.viewTerms(projectId));
+        //System.out.println("Terms: " + client.viewTerms(projectId));
         
         //URL url = Thread.currentThread().getContextClassLoader().getResource("android.xml");
         //File uploadFile = new File(url.getPath());

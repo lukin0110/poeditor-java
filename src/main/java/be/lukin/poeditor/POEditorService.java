@@ -83,16 +83,24 @@ public interface POEditorService {
             @Field("language") String language,
             @Field("admin") int admin
     );
-    
+
+    /**
+     * *
+     * @param action add_terms or delete_terms
+     * @param token
+     * @param projectId
+     * @param terms
+     * @return TermsResponse
+     */
     @FormUrlEncoded
     @POST("/")
-    public AddTermsResponse addTerms(
+    public EditTermsResponse editTerms(
             @Field("action") String action,
             @Field("api_token") String token,
             @Field("id") String projectId,
             @Field("data")String terms
     );
-    
+
     /**
      * https://poeditor.com/api_reference/#add_language_to_project
      * * 
@@ -155,5 +163,6 @@ public interface POEditorService {
             @Field("api_token") String token,
             @Field("id") String projectId, 
             @Field("language") String language);
+    
+    
 }
-
