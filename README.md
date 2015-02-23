@@ -1,7 +1,7 @@
 poeditor-java
 =============
 
-Client for the [POEditor][https://poeditor.com/] API in Java. Manage translation projects in Java.
+Client for the [POEditor API](https://poeditor.com/api_reference/) in Java. Manage translation projects in Java.
 
 Download
 --------
