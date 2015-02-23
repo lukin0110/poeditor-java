@@ -1,18 +1,16 @@
 package be.lukin.poeditor;
 
 import be.lukin.poeditor.models.Project;
+import be.lukin.poeditor.models.Term;
 import be.lukin.poeditor.models.UploadDetails;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
-/**
- * TODO:
- * - local gradle test project
- */
 public class Main {
     
     public static void main(String[] args) throws IOException {
@@ -44,10 +42,14 @@ public class Main {
         //terms.add(new Term("test_mh2"));
         //client.addTerms(projectId, terms);
 
-        URL url = Thread.currentThread().getContextClassLoader().getResource("android.xml");
-        File uploadFile = new File(url.getPath());
-        UploadDetails details = client.upload(projectId, uploadFile);
-        System.out.println("Upload: " + details);
+        //System.out.println("Add German :" + client.addProjectLanguage(projectId, "de"));
+        //System.out.println("Create Project: " + client.createProject("Butsing"));
+        System.out.println("Terms: " + client.viewTerms(projectId));
+        
+        //URL url = Thread.currentThread().getContextClassLoader().getResource("android.xml");
+        //File uploadFile = new File(url.getPath());
+        //UploadDetails details = client.upload(projectId, uploadFile);
+        //System.out.println("Upload: " + details);
         
         System.out.println("\n\nDone!");
     }

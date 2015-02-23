@@ -44,12 +44,17 @@ public interface POEditorService {
             @Field("language") String language, 
             @Field("type") String fileType, 
             @Field("filters") String[] filters);
-
+    
     /**
      * https://poeditor.com/api_reference/#upload
-     * Action: upload 
-     * 
-     * - updating - options (terms, terms_definitions, definitions)
+     *  - updating - options (terms, terms_definitions, definitions)
+     *  *  
+     * @param action upload
+     * @param token
+     * @param projectId
+     * @param updating
+     * @param file
+     * @return UploadResponse
      */
     @Multipart
     @POST("/")
@@ -87,10 +92,15 @@ public interface POEditorService {
             @Field("id") String projectId,
             @Field("data")String terms
     );
-
+    
     /**
      * https://poeditor.com/api_reference/#add_language_to_project
-     * Action: add_language
+     * * 
+     * @param action add_language
+     * @param token
+     * @param projectId
+     * @param language
+     * @return ResponseWrapper
      */
     @FormUrlEncoded
     @POST("/")
@@ -99,10 +109,14 @@ public interface POEditorService {
             @Field("api_token") String token,
             @Field("id") String projectId,
             @Field("language") String language);
-
+    
     /**
      * https://poeditor.com/api_reference/#clear_reference_language
-     * Action: clear_reference_language
+     * * 
+     * @param action clear_reference_language
+     * @param token
+     * @param projectId
+     * @return ResponseWrapper
      */
     @FormUrlEncoded
     @POST("/")
@@ -110,4 +124,36 @@ public interface POEditorService {
             @Field("action") String action,
             @Field("api_token") String token,
             @Field("id") String projectId);
+
+    /**
+     * https://poeditor.com/api_reference/#create_project
+     *
+     * @param action value must be create_project
+     * @param token api key
+     * @param name name of the project that you want to create
+     * @return ResponseWrapper
+     */
+    @FormUrlEncoded
+    @POST("/")
+    public ResponseWrapper createProject(
+            @Field("action") String action,
+            @Field("api_token") String token,
+            @Field("name") String name);
+    
+    /**
+     * https://poeditor.com/api_reference/#view_project_terms
+     *
+     * @param action value must be view_terms
+     * @param token api key
+     * @param projectId id of the project
+     * @return ViewTermsResponse
+     */
+    @FormUrlEncoded
+    @POST("/")
+    public ViewTermsResponse viewProjectTerms(
+            @Field("action") String action,
+            @Field("api_token") String token,
+            @Field("id") String projectId, 
+            @Field("language") String language);
 }
+

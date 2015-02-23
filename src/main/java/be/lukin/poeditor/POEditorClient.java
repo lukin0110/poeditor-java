@@ -19,22 +19,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-
-/*
-TODO:
-    def create_project(self, name, description=None):
-    def view_project_terms(self, project_id, language_code=None):
-    def delete_terms(self, project_id, data):
-    def sync_terms(self, project_id, data):
-    def update_project_language(self, project_id, language_code, data):
-    def update_terms(self, project_id, file_path=None, language_code=None,
-                     overwrite=False, sync_terms=False, tags=None):
-    def update_terms_definitions(self, project_id, file_path=None,
-                                 language_code=None, overwrite=False,
-                                 sync_terms=False, tags=None):
-    def update_definitions(self, project_id, file_path=None,
-                           language_code=None, overwrite=False):
- */
 public class POEditorClient {
     
     public static final String HOST = "https://poeditor.com/api/";
@@ -42,6 +26,8 @@ public class POEditorClient {
     public static class Action {
         public static final String LIST_PROJECTS = "list_projects";
         public static final String VIEW_PROJECT = "view_project";
+        public static final String VIEW_TERMS = "view_terms";
+        public static final String CREATE_PROJECT = "create_project";
         public static final String LIST_LANGUAGES = "list_languages";
         public static final String AVAILABLE_LANGUAGES = "available_languages";
         public static final String LIST_CONTRIBUTORS = "list_contributors";
@@ -55,10 +41,16 @@ public class POEditorClient {
     }
     
     private String apiKey;
+    private String endpoint;
     private POEditorService service;
 
     public POEditorClient(String apiKey) {
+        this(apiKey, HOST);
+    }
+    
+    public POEditorClient(String apiKey, String endpoint){
         this.apiKey = apiKey;
+        this.endpoint = endpoint;
         init();
     }
     
@@ -81,7 +73,7 @@ public class POEditorClient {
                 .setLogLevel(RestAdapter.LogLevel.FULL)
                 .setRequestInterceptor(requestInterceptor)
                 .setClient(new OkClient())
-                .setEndpoint(HOST).build();
+                .setEndpoint(this.endpoint).build();
     }
     
     public List<Project> getProjects(){
@@ -91,6 +83,16 @@ public class POEditorClient {
     public Project getProject(String projectId){
         ProjectDetailResponse pdr = service.getProject(Action.VIEW_PROJECT, apiKey, projectId);
         return pdr.item;
+    }
+    
+    public Project createProject(String name){
+        ResponseWrapper wrapper = service.createProject(Action.CREATE_PROJECT, apiKey, name);
+        
+        if("200".equals(wrapper.response.code) && wrapper.response.item != null) {
+            return getProject(Integer.toString(wrapper.response.item.id));
+        }
+        
+        return null;
     }
     
     public List<Language> getAvailableLanguages(){
@@ -111,6 +113,7 @@ public class POEditorClient {
     
     public boolean addProjectLanguage(String projectId, String language){
         ResponseWrapper wrapper = service.editProjectLanguage(Action.ADD_LANGUAGE, apiKey, projectId, language);
+        //System.out.println("Response: " + wrapper);
         return "200".equals(wrapper.response.code);
     }
     
@@ -125,7 +128,7 @@ public class POEditorClient {
     }
 
     public boolean clearProjectReferenceLanguage(String projectId, String language){
-        ResponseWrapper wrapper = service.clearProjectReferenceLanguage(Action.SET_REFERENCE_LANGUAGE, apiKey, projectId);
+        ResponseWrapper wrapper = service.clearProjectReferenceLanguage(Action.CLEAR_REFERENCE_LANGUAGE, apiKey, projectId);
         return "200".equals(wrapper.response.code);
     }
     
@@ -208,5 +211,10 @@ public class POEditorClient {
         TypedFile typedFile = new TypedFile("application/xml", translationFile);
         UploadResponse ur = service.upload("upload", apiKey, projectId, "terms", typedFile);
         return ur.details;
+    }
+    
+    public List<Term> viewTerms(String projectId){
+        ViewTermsResponse response = service.viewProjectTerms(Action.VIEW_TERMS, apiKey, projectId, null);
+        return response.list;
     }
 }

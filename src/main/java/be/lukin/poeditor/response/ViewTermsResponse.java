@@ -1,14 +1,20 @@
 package be.lukin.poeditor.response;
 
 import be.lukin.poeditor.models.Response;
+import be.lukin.poeditor.models.Term;
 
-public class ResponseWrapper {
+import java.util.List;
+
+
+public class ViewTermsResponse {
     public Response response;
+    public List<Term> list;
 
     @Override
     public String toString() {
-        return "ResponseWrapper{" +
+        return "ViewTermsResponse{" +
                 "response=" + response +
+                ", list=" + list +
                 '}';
     }
 }

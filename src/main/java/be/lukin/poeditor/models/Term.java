@@ -8,6 +8,8 @@ public class Term {
     public String reference;
     public String plural;
     public String comment;
+    public String created;
+    public String updated;
     public List<String> tags;
 
     public Term(){}
@@ -24,6 +26,8 @@ public class Term {
                 ", reference='" + reference + '\'' +
                 ", plural='" + plural + '\'' +
                 ", comment='" + comment + '\'' +
+                ", created='" + created + '\'' +
+                ", updated='" + updated + '\'' +
                 ", tags=" + tags +
                 '}';
     }
