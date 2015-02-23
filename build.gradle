@@ -51,10 +51,10 @@ task sourcesJar(type: Jar) {
     from sourceSets.main.allSource
 }
 
-//artifacts {
-//    archives javadocJar, sourcesJar
-//}
-//
+artifacts {
+    archives javadocJar, sourcesJar
+}
+
 //signing {
 //    sign configurations.archives
 //}
@@ -101,7 +101,7 @@ uploadArchives {
             }
 
             pom.project {
-                name 'java-poeditor'
+                name 'poeditor-java'
                 packaging 'jar'
                 artifactId 'poeditor-client'
                 description 'API Client for the POEditor API'

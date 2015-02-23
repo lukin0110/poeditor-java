@@ -47,13 +47,12 @@ public interface POEditorService {
     
     /**
      * https://poeditor.com/api_reference/#upload
-     *  - updating - options (terms, terms_definitions, definitions)
      *  *  
      * @param action upload
-     * @param token
-     * @param projectId
-     * @param updating
-     * @param file
+     * @param token api key
+     * @param projectId id of the project
+     * @param updating what to update:, options: terms, terms_definitions, definitions
+     * @param file file to upload
      * @return UploadResponse
      */
     @Multipart
@@ -71,7 +70,22 @@ public interface POEditorService {
             @Field("action") String action,
             @Field("api_token") String token,
             @Field("id") String projectId);
-  
+
+    /**
+     * https://poeditor.com/api_reference/#Contributors
+     *
+     * - language - language code (Required if adding a contributor)
+     * - admin - 0 / 1 (Default 0; 1 for adding as administrator)
+     *
+     * @param action value must be add_contributor
+     * @param token api key
+     * @param projectId id of the project
+     * @param name name of the contributor/admin
+     * @param email email of the contributor/admin
+     * @param language language to contribute to
+     * @param admin is it an admin or contributor
+     * @return ResponseWrapper
+     */
     @FormUrlEncoded
     @POST("/")
     public ResponseWrapper addProjectMember(
@@ -87,9 +101,9 @@ public interface POEditorService {
     /**
      * *
      * @param action add_terms or delete_terms
-     * @param token
-     * @param projectId
-     * @param terms
+     * @param token api key
+     * @param projectId id of the project
+     * @param terms json string with a list of terms
      * @return TermsResponse
      */
     @FormUrlEncoded
@@ -105,9 +119,9 @@ public interface POEditorService {
      * https://poeditor.com/api_reference/#add_language_to_project
      * * 
      * @param action add_language
-     * @param token
-     * @param projectId
-     * @param language
+     * @param token api key
+     * @param projectId id of the project
+     * @param language language to edit
      * @return ResponseWrapper
      */
     @FormUrlEncoded
@@ -122,8 +136,8 @@ public interface POEditorService {
      * https://poeditor.com/api_reference/#clear_reference_language
      * * 
      * @param action clear_reference_language
-     * @param token
-     * @param projectId
+     * @param token api key
+     * @param projectId id of the project
      * @return ResponseWrapper
      */
     @FormUrlEncoded
@@ -154,6 +168,7 @@ public interface POEditorService {
      * @param action value must be view_terms
      * @param token api key
      * @param projectId id of the project
+     * @param language language in which you want to show the terms
      * @return ViewTermsResponse
      */
     @FormUrlEncoded

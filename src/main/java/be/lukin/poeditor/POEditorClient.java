@@ -19,6 +19,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Client to access the API of POEditor. Your API key can be found on My Account &gt; API Access.
+ * 
+ * @see <a href="https://poeditor.com/api/">API Endpoint</a>
+ * @see <a href="https://poeditor.com/api_reference/">API Documentation</a>
+ */
 public class POEditorClient {
     
     public static final String HOST = "https://poeditor.com/api/";
@@ -45,10 +51,21 @@ public class POEditorClient {
     private String endpoint;
     private POEditorService service;
 
+    /**
+     * Create a client instance. 
+     *  
+     * @param apiKey api key to authenticate
+     */
     public POEditorClient(String apiKey) {
         this(apiKey, HOST);
     }
-    
+
+    /**
+     * Create a client instance with a custom endpoint. This allows you to access a stubbed endpoint, used for testing.
+     *  
+     * @param apiKey api key
+     * @param endpoint custom endpoint
+     */
     public POEditorClient(String apiKey, String endpoint){
         this.apiKey = apiKey;
         this.endpoint = endpoint;
@@ -139,15 +156,12 @@ public class POEditorClient {
     }
 
     /**
-     * https://poeditor.com/api_reference/#Contributors
-     * 
-     * - language - language code (Required if adding a contributor)
-     * - admin - 0 / 1 (Default 0; 1 for adding as administrator)
-     * 
-     * @param projectId
-     * @param name
-     * @param email
-     * @return
+     * Create a new admin for a project
+     *  
+     * @param projectId id of the project
+     * @param name name of the admin
+     * @param email email of the admin
+     * @return boolean if the administrator has been created
      */
     public boolean addAdministrator(String projectId, String name, String email){
         ResponseWrapper wrapper = service.addProjectMember(Action.ADD_CONTRIBUTOR, apiKey, projectId, name, email, null, 1);
@@ -155,21 +169,26 @@ public class POEditorClient {
     }
 
     /**
-     * https://poeditor.com/api_reference/#Contributors
-     *
-     * - language - language code (Required if adding a contributor)
-     * - admin - 0 / 1 (Default 0; 1 for adding as administrator)
-     *
-     * @param projectId
-     * @param name
-     * @param email
-     * @return
+     * Add/create a contributor for a language of a project
+     * 
+     * @param projectId id of the project
+     * @param name name of the contributor
+     * @param email email of the contributor
+     * @param language language for the contributor              
+     * @return boolean if the contributor has been added
      */
     public boolean addContributor(String projectId, String name, String email, String language){
         ResponseWrapper wrapper = service.addProjectMember(Action.ADD_CONTRIBUTOR, apiKey, projectId, name, email, language, 0);
         return "200".equals(wrapper.response.code);
     }
 
+    /**
+     * Add new terms to a project
+     *  
+     * @param projectId id of the project
+     * @param terms list of terms
+     * @return details about the operation
+     */
     public TermsDetails addTerms(String projectId, List<Term> terms){
         String jsonTerms = new Gson().toJson(terms);
         EditTermsResponse atr = service.editTerms(Action.ADD_TERMS, apiKey, projectId, jsonTerms);
@@ -182,6 +201,15 @@ public class POEditorClient {
         return etr.details;
     }
 
+    /**
+     * Export a translation for a language of a project.
+     *
+     * @param projectId id of the project
+     * @param language language code
+     * @param fte which type to export
+     * @param filters which filter to apply
+     * @return file object of the exported file
+     */
     public File export(String projectId, String language, FileTypeEnum fte, FileTypeEnum[] filters){
         return export(projectId, language, fte, filters, null);
     }
