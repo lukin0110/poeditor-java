@@ -5,7 +5,7 @@ apply plugin: 'maven-publish'
 
 // Artifact settings
 group = 'be.lukin.poeditor'
-version = '0.1.0'
+version = '0.1.1'
 archivesBaseName = 'poeditor-client'
 
 def _name = 'POEditor API Client'

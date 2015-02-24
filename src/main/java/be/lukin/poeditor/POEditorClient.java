@@ -49,6 +49,7 @@ public class POEditorClient {
     
     private String apiKey;
     private String endpoint;
+    private RestAdapter.LogLevel logLevel = RestAdapter.LogLevel.NONE;
     private POEditorService service;
 
     /**
@@ -57,7 +58,7 @@ public class POEditorClient {
      * @param apiKey api key to authenticate
      */
     public POEditorClient(String apiKey) {
-        this(apiKey, HOST);
+        this(apiKey, HOST, RestAdapter.LogLevel.NONE);
     }
 
     /**
@@ -66,9 +67,10 @@ public class POEditorClient {
      * @param apiKey api key
      * @param endpoint custom endpoint
      */
-    public POEditorClient(String apiKey, String endpoint){
+    public POEditorClient(String apiKey, String endpoint, RestAdapter.LogLevel logLevel){
         this.apiKey = apiKey;
         this.endpoint = endpoint;
+        this.logLevel = logLevel;
         init();
     }
     
@@ -88,7 +90,8 @@ public class POEditorClient {
 
         return new RestAdapter.Builder()
                 //.setLogLevel(BuildConfig.DEBUG ? RestAdapter.LogLevel.FULL : RestAdapter.LogLevel.NONE)
-                .setLogLevel(RestAdapter.LogLevel.FULL)
+                //.setLogLevel(RestAdapter.LogLevel.FULL)
+                .setLogLevel(logLevel)
                 .setRequestInterceptor(requestInterceptor)
                 .setClient(new OkClient())
                 .setEndpoint(this.endpoint).build();
@@ -216,7 +219,7 @@ public class POEditorClient {
     
     public File export(String projectId, String language, FileTypeEnum fte, FileTypeEnum[] filters, File exportFile){
         FileExport fe = service.export(Action.EXPORT, apiKey, projectId, language, fte.name().toLowerCase(), null);
-        System.out.println(fe.item);
+        //System.out.println(fe.item);
         
         try {
             if(exportFile != null){
@@ -240,7 +243,14 @@ public class POEditorClient {
 
         return null;
     }
-    
+
+    /**
+     * Uploads a translation file. For the moment it only takes terms into account.
+     *
+     * @param projectId id of the project
+     * @param translationFile terms file to upload
+     * @return UploadDetails
+     */
     public UploadDetails upload(String projectId, File translationFile){
         //- updating - options (terms, terms_definitions, definitions) 
         TypedFile typedFile = new TypedFile("application/xml", translationFile);

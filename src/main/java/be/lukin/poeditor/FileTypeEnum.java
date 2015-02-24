@@ -14,5 +14,5 @@ public enum FileTypeEnum {
     RESX,
     RESW,
     PROPERTIES,
-    JSON
+    JSON;
 }
