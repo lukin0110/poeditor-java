@@ -66,6 +66,7 @@ public class POEditorClient {
      *  
      * @param apiKey api key
      * @param endpoint custom endpoint
+     * @param logLevel desired logLevel for Retrofit
      */
     public POEditorClient(String apiKey, String endpoint, RestAdapter.LogLevel logLevel){
         this.apiKey = apiKey;

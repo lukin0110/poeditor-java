@@ -1,6 +1,9 @@
 # Todo
 
 - upload terms and language
+- .travis.yml
+- main jar method
+
 - make apiary stub
 - implement all api calls
     def update_project_language(self, project_id, language_code, data):

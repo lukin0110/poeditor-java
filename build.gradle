@@ -141,6 +141,11 @@ uploadArchives {
                         email 'maarten@lukin.be'
                     }
                 }
+
+                issueManagement {
+                    system 'GitHub issues'
+                    url 'https://github.com/lukin0110/poeditor-java/issues'
+                }
             }
         }
     }
