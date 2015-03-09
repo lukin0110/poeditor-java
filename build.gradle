@@ -101,17 +101,24 @@ publishing {
 /**
  * Old way of publishing, but still needed
  */
+// Username & password for Sonatype, stored in gradle.properties
+def _ossrhUsername = this.properties['ossrhUsername']
+def _ossrhPassword = this.properties['ossrhPassword']
+
 uploadArchives {
     repositories {
         mavenDeployer {
-            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
-
-            repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
-                authentication(userName: ossrhUsername, password: ossrhPassword)
+            if(this.hasProperty('remote')){
+                beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+                repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+                    authentication(userName: _ossrhUsername, password: _ossrhPassword)
+                }
+            } else {
+                repository(url: uri('./build/repo'))
             }
-
+            
             snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
-                authentication(userName: ossrhUsername, password: ossrhPassword)
+                authentication(userName: _ossrhUsername, password: _ossrhPassword)
             }
 
             pom.project {
