@@ -142,17 +142,30 @@ public class TestClient {
     }
 
     @Test
-    public void upload(){
+    public void uploadTerms(){
         URL url = Thread.currentThread().getContextClassLoader().getResource("android.xml");
         File uploadFile = new File(url.getPath());
         logger.info("Path: " + uploadFile.getAbsolutePath());
-        UploadDetails details = client.upload(projectId, uploadFile);
+        UploadDetails details = client.uploadTerms(projectId, uploadFile);
         logger.info("Upload: " + details);
         
         assertEquals(3, details.terms.parsed);
         assertEquals(0, details.terms.deleted);
-        
         assertEquals(0, details.definitions.parsed);
+        assertEquals(0, details.definitions.added);
+        assertEquals(0, details.definitions.deleted);
+    }
+    
+    @Test
+    public void uploadLanguage(){
+        URL url = Thread.currentThread().getContextClassLoader().getResource("android.xml");
+        File uploadFile = new File(url.getPath());
+        UploadDetails details = client.uploadLanguage(projectId, uploadFile, "nl", true);
+        logger.info("Upload: " + details);
+
+        assertEquals(0, details.terms.parsed);
+        assertEquals(0, details.terms.deleted);
+        assertEquals(3, details.definitions.parsed);
         assertEquals(0, details.definitions.added);
         assertEquals(0, details.definitions.deleted);
     }

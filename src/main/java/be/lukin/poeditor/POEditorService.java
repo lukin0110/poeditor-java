@@ -47,12 +47,14 @@ public interface POEditorService {
     
     /**
      * https://poeditor.com/api_reference/#upload
-     *  *  
+     * 
      * @param action upload
      * @param token api key
      * @param projectId id of the project
-     * @param updating what to update:, options: terms, terms_definitions, definitions
+     * @param updating - options (terms, terms_definitions, definitions)
      * @param file file to upload
+     * @param language - language code (Required only if type is terms_definitions or definitions)
+     * @param overwrite - set it to 1 if you want to overwrite definitions
      * @return UploadResponse
      */
     @Multipart
@@ -62,7 +64,9 @@ public interface POEditorService {
             @Part("api_token") String token,
             @Part("id") String projectId,
             @Part("updating") String updating,
-            @Part("file") TypedFile file);
+            @Part("file") TypedFile file, 
+            @Part("language") String language, 
+            @Part("overwrite") String overwrite);
 
     @FormUrlEncoded
     @POST("/")

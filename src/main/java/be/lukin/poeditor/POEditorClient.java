@@ -252,10 +252,16 @@ public class POEditorClient {
      * @param translationFile terms file to upload
      * @return UploadDetails
      */
-    public UploadDetails upload(String projectId, File translationFile){
-        //- updating - options (terms, terms_definitions, definitions) 
+    public UploadDetails uploadTerms(String projectId, File translationFile){
         TypedFile typedFile = new TypedFile("application/xml", translationFile);
-        UploadResponse ur = service.upload("upload", apiKey, projectId, "terms", typedFile);
+        UploadResponse ur = service.upload("upload", apiKey, projectId, "terms", typedFile, null, "0");
+        return ur.details;
+    }
+    
+    public UploadDetails uploadLanguage(String projectId, File translationFile, String language, boolean overwrite){
+        TypedFile typedFile = new TypedFile("application/xml", translationFile);
+        String _overwrite = overwrite ? "1" : "0";
+        UploadResponse ur = service.upload("upload", apiKey, projectId, "definitions", typedFile, language, _overwrite);
         return ur.details;
     }
     
