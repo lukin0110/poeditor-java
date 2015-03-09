@@ -1,5 +1,6 @@
 package be.lukin.poeditor;
 
+import be.lukin.poeditor.exceptions.PermissionDeniedException;
 import be.lukin.poeditor.models.*;
 import be.lukin.poeditor.response.*;
 import com.google.gson.Gson;
@@ -18,6 +19,7 @@ import java.nio.channels.ReadableByteChannel;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * Client to access the API of POEditor. Your API key can be found on My Account &gt; API Access.
@@ -69,9 +71,11 @@ public class POEditorClient {
      * @param logLevel desired logLevel for Retrofit
      */
     public POEditorClient(String apiKey, String endpoint, RestAdapter.LogLevel logLevel){
+        Objects.requireNonNull(apiKey, "apiKey is required");
+        Objects.requireNonNull(endpoint, "endpoint is required");
         this.apiKey = apiKey;
         this.endpoint = endpoint;
-        this.logLevel = logLevel;
+        this.logLevel = logLevel != null ? logLevel : RestAdapter.LogLevel.NONE;
         init();
     }
     
@@ -104,11 +108,13 @@ public class POEditorClient {
     
     public Project getProject(String projectId){
         ProjectDetailResponse pdr = service.getProject(Action.VIEW_PROJECT, apiKey, projectId);
+        ApiUtils.checkResponse(pdr.response);
         return pdr.item;
     }
     
     public Project createProject(String name){
         ResponseWrapper wrapper = service.createProject(Action.CREATE_PROJECT, apiKey, name);
+        ApiUtils.checkResponse(wrapper.response);
         
         if("200".equals(wrapper.response.code) && wrapper.response.item != null) {
             return getProject(Integer.toString(wrapper.response.item.id));
@@ -130,32 +136,36 @@ public class POEditorClient {
     
     public List<Language> getProjectLanguages(String projectId){
         LanguagesResponse lr = service.getProjectLanguages(Action.LIST_LANGUAGES, apiKey, projectId);
+        ApiUtils.checkResponse(lr.response);
         return lr.list;
     }
     
     public boolean addProjectLanguage(String projectId, String language){
         ResponseWrapper wrapper = service.editProjectLanguage(Action.ADD_LANGUAGE, apiKey, projectId, language);
-        //System.out.println("Response: " + wrapper);
         return "200".equals(wrapper.response.code);
     }
     
     public boolean deleteProjectLanguage(String projectId, String language){
         ResponseWrapper wrapper = service.editProjectLanguage(Action.DELETE_LANGUAGE, apiKey, projectId, language);
+        ApiUtils.checkResponse(wrapper.response);
         return "200".equals(wrapper.response.code);
     }
 
     public boolean setProjectReferenceLanguage(String projectId, String language){
         ResponseWrapper wrapper = service.editProjectLanguage(Action.SET_REFERENCE_LANGUAGE, apiKey, projectId, language);
+        ApiUtils.checkResponse(wrapper.response);
         return "200".equals(wrapper.response.code);
     }
 
     public boolean clearProjectReferenceLanguage(String projectId, String language){
         ResponseWrapper wrapper = service.clearProjectReferenceLanguage(Action.CLEAR_REFERENCE_LANGUAGE, apiKey, projectId);
+        ApiUtils.checkResponse(wrapper.response);
         return "200".equals(wrapper.response.code);
     }
     
     public List<Contributor> getProjectContributors(String projectId){
         ContributorsResponse cr = service.getContributors(Action.LIST_CONTRIBUTORS, apiKey, projectId);
+        ApiUtils.checkResponse(cr.response);
         return cr.list;
     }
 
@@ -169,6 +179,7 @@ public class POEditorClient {
      */
     public boolean addAdministrator(String projectId, String name, String email){
         ResponseWrapper wrapper = service.addProjectMember(Action.ADD_CONTRIBUTOR, apiKey, projectId, name, email, null, 1);
+        ApiUtils.checkResponse(wrapper.response);
         return "200".equals(wrapper.response.code);
     }
 
@@ -183,6 +194,7 @@ public class POEditorClient {
      */
     public boolean addContributor(String projectId, String name, String email, String language){
         ResponseWrapper wrapper = service.addProjectMember(Action.ADD_CONTRIBUTOR, apiKey, projectId, name, email, language, 0);
+        ApiUtils.checkResponse(wrapper.response);
         return "200".equals(wrapper.response.code);
     }
 
@@ -196,12 +208,14 @@ public class POEditorClient {
     public TermsDetails addTerms(String projectId, List<Term> terms){
         String jsonTerms = new Gson().toJson(terms);
         EditTermsResponse atr = service.editTerms(Action.ADD_TERMS, apiKey, projectId, jsonTerms);
+        ApiUtils.checkResponse(atr.response);
         return atr.details;
     }
     
     public TermsDetails deleteTerms(String projectId, List<Term> terms){
         String jsonTerms = new Gson().toJson(terms);
         EditTermsResponse etr = service.editTerms(Action.DELETE_TERMS, apiKey, projectId, jsonTerms);
+        ApiUtils.checkResponse(etr.response);
         return etr.details;
     }
 
@@ -255,6 +269,7 @@ public class POEditorClient {
     public UploadDetails uploadTerms(String projectId, File translationFile){
         TypedFile typedFile = new TypedFile("application/xml", translationFile);
         UploadResponse ur = service.upload("upload", apiKey, projectId, "terms", typedFile, null, "0");
+        ApiUtils.checkResponse(ur.response);
         return ur.details;
     }
     
@@ -262,11 +277,13 @@ public class POEditorClient {
         TypedFile typedFile = new TypedFile("application/xml", translationFile);
         String _overwrite = overwrite ? "1" : "0";
         UploadResponse ur = service.upload("upload", apiKey, projectId, "definitions", typedFile, language, _overwrite);
+        ApiUtils.checkResponse(ur.response);
         return ur.details;
     }
     
     public List<Term> viewTerms(String projectId){
         ViewTermsResponse response = service.viewProjectTerms(Action.VIEW_TERMS, apiKey, projectId, null);
+        ApiUtils.checkResponse(response.response);
         return response.list;
     }
 

@@ -1,9 +1,12 @@
 package be.lukin.poeditor;
 
+import be.lukin.poeditor.exceptions.PermissionDeniedException;
 import be.lukin.poeditor.models.*;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import retrofit.RestAdapter;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -30,7 +33,7 @@ public class TestClient {
         properties.load(Thread.currentThread().getContextClassLoader().getResourceAsStream("config.properties"));
         String apiKey = properties.getProperty("poeditor.apiKey");
         projectId = properties.getProperty("poeditor.testProjectId");
-        client = new POEditorClient(apiKey);
+        client = new POEditorClient(apiKey, POEditorClient.HOST, RestAdapter.LogLevel.FULL);
         logger.info("Client: " + client);
     }
     
@@ -49,13 +52,17 @@ public class TestClient {
         assertEquals(project.isPublic, "0");
         assertEquals(project.open, "0");
         
-        
         /*
                 System.out.println("Length: " + list.size());
         System.out.println("Project: " + projectId);
         //System.out.println("Languages: " + client.getProjectLanguages(projectId));
         //System.out.println("Available: " + client.getAvailableLanguages());
          */
+    }
+
+    @Test(expected=PermissionDeniedException.class)
+    public void projectDetailsDenied() {
+        client.getProject("doesntExist");
     }
     
     @Test
