@@ -1,5 +1,6 @@
 poeditor-java
 =============
+[![Build Status](https://travis-ci.org/lukin0110/poeditor-java.svg)](https://travis-ci.org/lukin0110/poeditor-java)
 
 Client for the [POEditor API][1] in Java. Manage translation projects in Java.
 
