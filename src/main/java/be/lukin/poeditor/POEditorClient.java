@@ -179,7 +179,6 @@ public class POEditorClient {
      */
     public boolean addAdministrator(String projectId, String name, String email){
         ResponseWrapper wrapper = service.addProjectMember(Action.ADD_CONTRIBUTOR, apiKey, projectId, name, email, null, 1);
-        ApiUtils.checkResponse(wrapper.response);
         return "200".equals(wrapper.response.code);
     }
 

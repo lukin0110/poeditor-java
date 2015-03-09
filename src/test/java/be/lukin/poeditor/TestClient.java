@@ -1,5 +1,6 @@
 package be.lukin.poeditor;
 
+import be.lukin.poeditor.exceptions.InvalidTokenException;
 import be.lukin.poeditor.exceptions.PermissionDeniedException;
 import be.lukin.poeditor.models.*;
 import org.junit.After;
@@ -18,7 +19,6 @@ import java.util.*;
 import java.util.logging.Logger;
 
 /**
- * System.out.println("Create Project: " + client.createProject("Butsing"));
  */
 public class TestClient {
 
@@ -60,9 +60,15 @@ public class TestClient {
          */
     }
 
-    @Test(expected=PermissionDeniedException.class)
+    @Test(expected = PermissionDeniedException.class)
     public void projectDetailsDenied() {
         client.getProject("doesntExist");
+    }
+    
+    @Test(expected = InvalidTokenException.class)
+    public void invalidToken(){
+        POEditorClient client = new POEditorClient("imAnInvalidToken", POEditorClient.HOST, RestAdapter.LogLevel.FULL);
+        client.getProject("test");
     }
     
     @Test
