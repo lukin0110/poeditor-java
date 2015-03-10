@@ -2,10 +2,7 @@ package be.lukin.poeditor;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Properties;
+import java.util.*;
 
 public class Config {
     private String apiKey;
@@ -13,6 +10,17 @@ public class Config {
     private String type;
     private String terms;
     private Map<String, String> translations = new HashMap<String, String>();
+
+    public Config() {
+    }
+
+    public Config(String apiKey, String projectId, String type, String terms, Map<String, String> translations) {
+        this.apiKey = apiKey;
+        this.projectId = projectId;
+        this.type = type;
+        this.terms = terms;
+        this.translations = translations;
+    }
 
     public String getApiKey() {
         return apiKey;
@@ -30,12 +38,16 @@ public class Config {
         return terms;
     }
     
-    public String getTranslation(String language){
+    public String getLanguage(String language){
         return translations.get(language);
     }
     
     public int getLanguageCount(){
         return translations.size();
+    }
+    
+    public Set<String> getLanguageKeys(){
+        return this.translations.keySet();
     }
 
     @Override

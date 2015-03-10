@@ -4,6 +4,9 @@ poeditor-java
 
 Client for the [POEditor API][1] in Java. Manage translation projects in Java.
 
+To suggest changes, please submit an [Issue](https://github.com/lukin0110/poeditor-java/issues/new)
+or [Pull Request](https://github.com/lukin0110/poeditor-java/compare/).
+
 Download
 --------
 

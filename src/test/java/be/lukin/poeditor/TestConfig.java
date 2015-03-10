@@ -20,9 +20,9 @@ public class TestConfig {
         assertNotNull(config.getTerms());
         assertEquals("android_strings", config.getType());
         assertEquals(3, config.getLanguageCount());
-        assertEquals("App/src/main/res/values/strings.xml", config.getTranslation("en"));
-        assertEquals("App/src/main/res/values-nl/strings.xml", config.getTranslation("nl"));
-        assertEquals("App/src/main/res/values-fr/strings.xml", config.getTranslation("fr"));
+        assertEquals("App/src/main/res/values/strings.xml", config.getLanguage("en"));
+        assertEquals("App/src/main/res/values-nl/strings.xml", config.getLanguage("nl"));
+        assertEquals("App/src/main/res/values-fr/strings.xml", config.getLanguage("fr"));
     }
     
     @Test

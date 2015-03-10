@@ -20,4 +20,5 @@ tmp-*.xml
 *.iml
 
 src/test/resources/config.properties
+src/test/resources/poeditor2.properties
 gradle.properties
