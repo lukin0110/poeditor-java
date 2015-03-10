@@ -96,13 +96,25 @@ public class TestClient {
     }
     
     @Test
-    public void export(){
+    public void export1(){
         UUID uuid = UUID.randomUUID();
-        File exportedFile = new File("./tmp-" + uuid.toString() + "-test=export.xml");
+        File exportedFile = new File("./tmp-" + uuid.toString() + "-test-export.xml");
         logger.info("PATH: " + exportedFile.getAbsolutePath());
         assertFalse(exportedFile.exists());
         
-        File result = client.export(projectId, "de", FileTypeEnum.ANDROID_STRINGS, null, exportedFile);
+        File result = client.export(projectId, "de", FileTypeEnum.ANDROID_STRINGS, null, exportedFile, null);
+        assertTrue(result.exists());
+        assertTrue(result.delete());
+    }
+    
+    @Test
+    public void export2(){
+        UUID uuid = UUID.randomUUID();
+        File exportedFile = new File("./tmp-" + uuid.toString() + "-test-export.xml");
+        logger.info("PATH: " + exportedFile.getAbsolutePath());
+        assertFalse(exportedFile.exists());
+
+        File result = client.export(projectId, "de", FileTypeEnum.ANDROID_STRINGS, null, exportedFile, new String[]{"test"});
         assertTrue(result.exists());
         assertTrue(result.delete());
     }
@@ -159,10 +171,10 @@ public class TestClient {
         URL url = Thread.currentThread().getContextClassLoader().getResource("android.xml");
         File uploadFile = new File(url.getPath());
         logger.info("Path: " + uploadFile.getAbsolutePath());
-        UploadDetails details = client.uploadTerms(projectId, uploadFile);
+        UploadDetails details = client.uploadTerms(projectId, uploadFile, new String[]{}, new String[]{"newbie"}, new String[]{"move it"});
         logger.info("Upload: " + details);
         
-        assertEquals(3, details.terms.parsed);
+        assertEquals(4, details.terms.parsed);
         assertEquals(0, details.terms.deleted);
         assertEquals(0, details.definitions.parsed);
         assertEquals(0, details.definitions.added);
@@ -178,7 +190,7 @@ public class TestClient {
 
         assertEquals(0, details.terms.parsed);
         assertEquals(0, details.terms.deleted);
-        assertEquals(3, details.definitions.parsed);
+        assertEquals(4, details.definitions.parsed);
         assertEquals(0, details.definitions.added);
         assertEquals(0, details.definitions.deleted);
     }

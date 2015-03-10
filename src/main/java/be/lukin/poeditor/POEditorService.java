@@ -35,15 +35,27 @@ public interface POEditorService {
             @Field("action") String action,
             @Field("api_token") String token);
 
+    /**
+     *
+     * @param action upload
+     * @param token api key
+     * @param projectId id of the project
+     * @param language - language code (Required only if type is terms_definitions or definitions)
+     * @param fileType - which file format to export
+     * @param filters - filter results by 'translated', 'untranslated', 'fuzzy', 'not_fuzzy', 'automatic', 'not_automatic', 'proofread', 'not_proofread' (only available when Proofreading is set to "Yes" in Project Settings); you can use either a string for a single filter or a json array for one or multiple filters (Optional)
+     * @param tags - filter results by tags; you can use either a string for a single tag or a json array for one or multiple tags (Optional).
+     * @return FileExport
+     */
     @FormUrlEncoded
     @POST("/")
     public FileExport export(
             @Field("action") String action, 
             @Field("api_token") String token, 
-            @Field("id") String id, 
+            @Field("id") String projectId,
             @Field("language") String language, 
             @Field("type") String fileType, 
-            @Field("filters") String[] filters);
+            @Field("filters") String[] filters, 
+            @Field("tags") String tags);
     
     /**
      * https://poeditor.com/api_reference/#upload
@@ -55,6 +67,7 @@ public interface POEditorService {
      * @param file file to upload
      * @param language - language code (Required only if type is terms_definitions or definitions)
      * @param overwrite - set it to 1 if you want to overwrite definitions
+     * @param tags - add tags to the project terms; available when updating "terms" or "terms_definitions"
      * @return UploadResponse
      */
     @Multipart
@@ -66,7 +79,8 @@ public interface POEditorService {
             @Part("updating") String updating,
             @Part("file") TypedFile file, 
             @Part("language") String language, 
-            @Part("overwrite") String overwrite);
+            @Part("overwrite") String overwrite, 
+            @Part("tags") String tags);
 
     @FormUrlEncoded
     @POST("/")

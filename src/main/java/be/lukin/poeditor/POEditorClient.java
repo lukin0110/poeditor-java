@@ -1,6 +1,5 @@
 package be.lukin.poeditor;
 
-import be.lukin.poeditor.exceptions.PermissionDeniedException;
 import be.lukin.poeditor.models.*;
 import be.lukin.poeditor.response.*;
 import com.google.gson.Gson;
@@ -16,10 +15,9 @@ import java.io.IOException;
 import java.net.URL;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Client to access the API of POEditor. Your API key can be found on My Account &gt; API Access.
@@ -48,6 +46,8 @@ public class POEditorClient {
         public static final String CLEAR_REFERENCE_LANGUAGE = "clear_reference_language";
         public static final String EXPORT = "export";
     }
+
+    private static final Logger LOG = Logger.getLogger(POEditorClient.class.getName());
     
     private String apiKey;
     private String endpoint;
@@ -227,14 +227,21 @@ public class POEditorClient {
      * @param filters which filter to apply
      * @return file object of the exported file
      */
-    public File export(String projectId, String language, FileTypeEnum fte, FileTypeEnum[] filters){
-        return export(projectId, language, fte, filters, null);
+    public File export(String projectId, String language, FileTypeEnum fte, FilterByEnum[] filters){
+        return export(projectId, language, fte, filters, null, null);
     }
-    
-    public File export(String projectId, String language, FileTypeEnum fte, FileTypeEnum[] filters, File exportFile){
-        FileExport fe = service.export(Action.EXPORT, apiKey, projectId, language, fte.name().toLowerCase(), null);
-        //System.out.println(fe.item);
+
+    public File export(String projectId, String language, FileTypeEnum fte, FilterByEnum[] filters, File exportFile, String[] tags){
+        String tagsStr;
         
+        if(tags != null && tags.length>0){
+            tagsStr = new Gson().toJson(tags);    
+        } else {
+            tagsStr = null;
+        }
+
+        FileExport fe = service.export(Action.EXPORT, apiKey, projectId, language, fte.name().toLowerCase(), FilterByEnum.toStringArray(filters), tagsStr);
+
         try {
             if(exportFile != null){
                 exportFile.createNewFile();
@@ -250,24 +257,46 @@ public class POEditorClient {
             return exportFile;
             
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            LOG.log(Level.SEVERE, e.toString(), e);
         } catch (IOException e) {
-            e.printStackTrace();
+            LOG.log(Level.SEVERE, e.toString(), e);
         }
 
         return null;
     }
 
+    public UploadDetails uploadTerms(String projectId, File translationFile){
+        return uploadTerms(projectId, translationFile, null, null, null);
+    }
+    
     /**
      * Uploads a translation file. For the moment it only takes terms into account.
      *
      * @param projectId id of the project
      * @param translationFile terms file to upload
+     * @param allTags - for the all the imported terms
+     * @param newTags - for the terms which aren't already in the project
+     * @param obsoleteTags - for the terms which are in the project but not in the imported file and "overwritten_translations"
      * @return UploadDetails
      */
-    public UploadDetails uploadTerms(String projectId, File translationFile){
+    public UploadDetails uploadTerms(String projectId, File translationFile, String[] allTags, String[] newTags, String[] obsoleteTags){
+        Map<String, String[]> tags = new HashMap<String, String[]>();
+        if(allTags != null) {
+            tags.put("all", allTags);
+        }
+        
+        if(newTags != null) {
+            tags.put("new", newTags);
+        }
+        
+        if(obsoleteTags != null) {
+            tags.put("obsolete", obsoleteTags);
+        }
+        
+        String tagsStr = new Gson().toJson(tags);
+        
         TypedFile typedFile = new TypedFile("application/xml", translationFile);
-        UploadResponse ur = service.upload("upload", apiKey, projectId, "terms", typedFile, null, "0");
+        UploadResponse ur = service.upload("upload", apiKey, projectId, "terms", typedFile, null, "0", tagsStr);
         ApiUtils.checkResponse(ur.response);
         return ur.details;
     }
@@ -275,7 +304,7 @@ public class POEditorClient {
     public UploadDetails uploadLanguage(String projectId, File translationFile, String language, boolean overwrite){
         TypedFile typedFile = new TypedFile("application/xml", translationFile);
         String _overwrite = overwrite ? "1" : "0";
-        UploadResponse ur = service.upload("upload", apiKey, projectId, "definitions", typedFile, language, _overwrite);
+        UploadResponse ur = service.upload("upload", apiKey, projectId, "definitions", typedFile, language, _overwrite, null);
         ApiUtils.checkResponse(ur.response);
         return ur.details;
     }
