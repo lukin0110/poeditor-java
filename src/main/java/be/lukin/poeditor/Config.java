@@ -1,0 +1,80 @@
+package be.lukin.poeditor;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Properties;
+
+public class Config {
+    private String apiKey;
+    private String projectId;
+    private String type;
+    private String terms;
+    private Map<String, String> translations = new HashMap<String, String>();
+
+    public String getApiKey() {
+        return apiKey;
+    }
+
+    public String getProjectId() {
+        return projectId;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public String getTerms() {
+        return terms;
+    }
+    
+    public String getTranslation(String language){
+        return translations.get(language);
+    }
+    
+    public int getLanguageCount(){
+        return translations.size();
+    }
+
+    @Override
+    public String toString() {
+        return "Config{" +
+                "apiKey='" + apiKey + '\'' +
+                ", projectId='" + projectId + '\'' +
+                ", type='" + type + '\'' +
+                ", terms='" + terms + '\'' +
+                ", translations=" + translations +
+                '}';
+    }
+    
+    public static Config read(InputStream inputStream) throws IOException {
+        Properties properties = new Properties();
+        properties.load(inputStream);
+        return read(properties);
+    }
+    
+    public static Config read(Properties properties) {
+        Config config = new Config();
+        config.apiKey = properties.getProperty("poeditor.apiKey");
+        Objects.requireNonNull(config.apiKey, "'poeditor.apiKey' is required");
+        config.projectId = properties.getProperty("poeditor.projectId");
+        Objects.requireNonNull(config.projectId, "'poeditor.projectId' is required");
+        config.type = properties.getProperty("poeditor.type");
+        Objects.requireNonNull(config.type, "'poeditor.type' is required");
+        config.terms = properties.getProperty("poeditor.terms");
+        
+        for(String key : properties.stringPropertyNames()){
+            if(key.startsWith("poeditor.trans.")){
+                config.translations.put(key.substring(15), properties.getProperty(key));
+            }
+        }
+        
+        if(config.translations.size() == 0){
+            throw new RuntimeException("No languages detected, you should provide at least on 'poeditor.trans.<lang> key'");
+        }
+        
+        return config;
+    }
+}

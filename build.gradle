@@ -10,7 +10,7 @@ version = '0.2.0'
 archivesBaseName = 'poeditor-client'
 
 // http://gradle.org/docs/current/userguide/application_plugin.html
-mainClassName = "be.lukin.poeditor.POEditorMain"
+mainClassName = "be.lukin.poeditor.JarMain"
 
 def _name = 'POEditor API Client'
 def _description = 'API Client for the POEditor API'

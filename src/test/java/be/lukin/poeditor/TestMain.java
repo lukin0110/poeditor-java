@@ -2,16 +2,13 @@ package be.lukin.poeditor;
 
 import be.lukin.poeditor.models.Project;
 import be.lukin.poeditor.models.Term;
-import be.lukin.poeditor.models.UploadDetails;
 
-import java.io.File;
 import java.io.IOException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
-public class Main {
+public class TestMain {
     
     public static void main(String[] args) throws IOException {
         Properties properties = new Properties();

@@ -1,8 +1,6 @@
 package be.lukin.poeditor;
 
 import be.lukin.poeditor.models.FileExport;
-import be.lukin.poeditor.models.Response;
-import be.lukin.poeditor.models.UploadDetails;
 import be.lukin.poeditor.response.*;
 import retrofit.http.*;
 import retrofit.mime.TypedFile;
