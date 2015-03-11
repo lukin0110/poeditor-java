@@ -13,7 +13,7 @@ public class TestConfig {
     @Test
     public void readInputStream() throws IOException {
         InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream("poeditor.properties");
-        Config config = Config.read(is);
+        Config config = Config.load(is);
         
         assertNotNull(config.getApiKey());
         assertNotNull(config.getProjectId());
@@ -36,7 +36,7 @@ public class TestConfig {
         Properties properties = new Properties();
         for(String prop : toCheck){
             try {
-                Config.read(properties);
+                Config.load(properties);
             } catch(NullPointerException npe) {
                 assertEquals(String.format("'%s' is required", prop), npe.getMessage());
             }
@@ -45,13 +45,13 @@ public class TestConfig {
         
         // Should fail on missing languages
         try {
-            Config.read(properties);
+            Config.load(properties);
         }catch (RuntimeException re){
            assertTrue(true);
         }
         
         properties.put("poeditor.trans.en", "foo");
-        Config config = Config.read(properties);
+        Config config = Config.load(properties);
         assertNotNull(config);
         assertEquals(1, config.getLanguageCount());
     }

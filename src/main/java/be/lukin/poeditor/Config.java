@@ -1,5 +1,7 @@
 package be.lukin.poeditor;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
@@ -61,13 +63,19 @@ public class Config {
                 '}';
     }
     
-    public static Config read(InputStream inputStream) throws IOException {
+    public static Config load(InputStream inputStream) throws IOException {
         Properties properties = new Properties();
         properties.load(inputStream);
-        return read(properties);
+        return load(properties);
     }
     
-    public static Config read(Properties properties) {
+    public static Config load(File file) throws IOException {
+        Properties properties = new Properties();
+        properties.load(new FileInputStream(file));
+        return load(properties);
+    }
+    
+    public static Config load(Properties properties) {
         Config config = new Config();
         config.apiKey = properties.getProperty("poeditor.apiKey");
         Objects.requireNonNull(config.apiKey, "'poeditor.apiKey' is required");

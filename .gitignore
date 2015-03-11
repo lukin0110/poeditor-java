@@ -19,6 +19,12 @@ repo/
 tmp-*.xml
 *.iml
 
-src/test/resources/config.properties
-src/test/resources/poeditor2.properties
 gradle.properties
+poeditor.properties
+
+src/test/resources/config.properties
+src/test/resources/poeditor.properties
+src/test/resources/poeditor2.properties
+src/main/resources/poeditor.properties
+src/main/resources/poeditor2.properties
+
