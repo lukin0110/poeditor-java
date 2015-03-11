@@ -1,4 +1,5 @@
 apply plugin: 'java'
+apply plugin: 'application'
 apply plugin: 'maven'
 apply plugin: 'signing'
 apply plugin: 'maven-publish'
@@ -7,6 +8,9 @@ apply plugin: 'maven-publish'
 group = 'be.lukin.poeditor'
 version = '0.2.0'
 archivesBaseName = 'poeditor-client'
+
+// http://gradle.org/docs/current/userguide/application_plugin.html
+mainClassName = "be.lukin.poeditor.JarMain"
 
 def _name = 'POEditor API Client'
 def _description = 'API Client for the POEditor API'
@@ -21,6 +25,20 @@ dependencies {
     compile 'com.squareup.okhttp:okhttp:2.0.0'
 
     testCompile group: 'junit', name: 'junit', version: '4.11'
+}
+
+jar {
+    manifest {
+        attributes 'Main-Class': mainClassName
+    }
+
+    exclude 'META-INF/*.RSA', 'META-INF/*.SF','META-INF/*.DSA'
+}
+
+run {
+    if ( project.hasProperty('args') ) {
+        args project.args.split('\\s+')
+    }
 }
 
 task javadocJar(type: Jar) {
