@@ -21,6 +21,7 @@ tmp-*.xml
 
 gradle.properties
 poeditor.properties
+poeditor-example.properties
 
 src/test/resources/config.properties
 src/test/resources/poeditor.properties

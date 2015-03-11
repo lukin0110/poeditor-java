@@ -2,7 +2,6 @@ package be.lukin.poeditor.tasks;
 
 import be.lukin.poeditor.Config;
 import be.lukin.poeditor.FileTypeEnum;
-import be.lukin.poeditor.POEditorClient;
 import be.lukin.poeditor.models.Project;
 
 import java.io.File;
@@ -15,7 +14,6 @@ public class PullTask extends BaseTask {
     public void handle() {
         System.out.println("Downloading translations");
         Config config = super.config;
-        POEditorClient client = new POEditorClient(config.getApiKey());
         Path current = Paths.get("");
         Project details = client.getProject(config.getProjectId());
 
