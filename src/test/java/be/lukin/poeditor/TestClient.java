@@ -1,5 +1,6 @@
 package be.lukin.poeditor;
 
+import be.lukin.poeditor.exceptions.ApiException;
 import be.lukin.poeditor.exceptions.InvalidTokenException;
 import be.lukin.poeditor.exceptions.PermissionDeniedException;
 import be.lukin.poeditor.models.*;
@@ -21,23 +22,51 @@ import static org.junit.Assert.*;
 public class TestClient {
 
     private POEditorClient client;
+    private String apiKey;
     private String projectId;
+    private Properties properties = new Properties();
 
     private static final Logger logger = Logger.getLogger(TestClient.class.getName());
     
+    private String getProperty(String key){
+        String property = properties.getProperty(key);
+        if(property == null){
+            property = System.getenv(key);
+        }
+        return property;
+    }
+    
     @Before
     public void setUp() throws IOException {
-        Properties properties = new Properties();
-        properties.load(Thread.currentThread().getContextClassLoader().getResourceAsStream("config.properties"));
-        String apiKey = properties.getProperty("poeditor.apiKey");
-        projectId = properties.getProperty("poeditor.testProjectId");
+        //properties.load(Thread.currentThread().getContextClassLoader().getResourceAsStream("config.properties"));
+        apiKey = getProperty("poeditorApiKey");
+        projectId = getProperty("poeditorTestProjectId");
+
         client = new POEditorClient(apiKey, POEditorClient.HOST, RestAdapter.LogLevel.FULL);
         logger.info("Client: " + client);
+
+        //Delete finish language
+        try {
+            client.deleteProjectLanguage(projectId, "fi");
+        }catch(ApiException ae){
+            //pass
+        }
     }
     
     @After
     public void tearDown(){
         //client.deleteProjectLanguage(projectId, "fi");
+    }
+    
+    @Test
+    public void listProjects(){
+        List<Project> projects = client.getProjects();
+        //assertEquals(4, projects.size());
+    }
+    
+    @Test
+    public void createProject(){
+        Project project = client.createProject("Automobile");
     }
     
     @Test 
@@ -100,7 +129,7 @@ public class TestClient {
         logger.info("PATH: " + exportedFile.getAbsolutePath());
         assertFalse(exportedFile.exists());
         
-        File result = client.export(projectId, "de", FileTypeEnum.ANDROID_STRINGS, null, exportedFile, null);
+        File result = client.export(projectId, "nl", FileTypeEnum.ANDROID_STRINGS, null, exportedFile, null);
         assertTrue(result.exists());
         assertTrue(result.delete());
     }
@@ -112,7 +141,7 @@ public class TestClient {
         logger.info("PATH: " + exportedFile.getAbsolutePath());
         assertFalse(exportedFile.exists());
 
-        File result = client.export(projectId, "de", FileTypeEnum.ANDROID_STRINGS, null, exportedFile, new String[]{"test"});
+        File result = client.export(projectId, "nl", FileTypeEnum.ANDROID_STRINGS, null, exportedFile, new String[]{"test"});
         assertTrue(result.exists());
         assertTrue(result.delete());
     }
@@ -150,15 +179,16 @@ public class TestClient {
         assertTrue(succeeded);
         
         List<Language> languages = client.getProjectLanguages(projectId);
-        int index = Collections.binarySearch(languages,  new Language("foo", "fi"), new Comparator<Language>() {
-            @Override
-            public int compare(Language o1, Language o2) {
-                return o1.code.equals(o2.code) ? 0 : 1;
+        boolean found = false;
+        for(Language l : languages){
+            if("fi".equals(l.code)){
+                found = true;  
+                break;
             }
-        });
-        
+        }
+
         // The language is found
-        assertTrue(index != -1);
+        assertTrue(found);
         
         succeeded = client.deleteProjectLanguage(projectId, "fi");
         assertTrue(succeeded);
