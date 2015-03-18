@@ -1,0 +1,73 @@
+FORMAT: 1A
+HOST: https://poeditor.com/api/
+
+# POEditor
+Stubs for the POEditor API.
+
+# Group Projects
+
+## List Projects [/]
+### Create a Note [POST]
++ Request (application/x-www-form-urlencoded)
+
+        api_token=a9824103d8729b923fbe1d268ec69ef9&action=list_projects
+
++ Response 200 (application/json)
+
+        {
+           "response":{
+              "status":"success",
+              "code":"200",
+              "message":"OK"
+           },
+           "list":[
+              {
+                 "id":"4886",
+                 "name":"Twentytwelve",
+                 "public":"0",
+                 "open":"0",
+                 "created":"2013-04-12 09:24:42"
+              },
+              {
+                 "id":"4537",
+                 "name":"contact form",
+                 "public":"0",
+                 "open":"0",
+                 "created":"2013-04-02 23:00:06"
+              },
+              {
+                 "id":"6639",
+                 "name":"POEditor WP plugin",
+                 "public":"0",
+                 "open":"0",
+                 "created":"2013-06-05 17:41:25"
+              },
+              {
+                 "id":"6268",
+                 "name":"Test Project",
+                 "public":"0",
+                 "open":"0",
+                 "created":"2013-05-23 14:26:34"
+              }
+           ]
+        }
+
+## Note [/notes/{id}]
+A single Note object with all its details
+
++ Parameters
+    + id (required, number, `1`) ... Numeric `id` of the Note to perform action with. Has example value.
+
+### Retrieve a Note [GET]
++ Response 200 (application/json)
+
+    + Header
+
+            X-My-Header: The Value
+
+    + Body
+
+            { "id": 2, "title": "Pick-up posters from post-office" }
+
+### Remove a Note [DELETE]
++ Response 204
