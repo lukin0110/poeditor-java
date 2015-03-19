@@ -13,6 +13,7 @@ public class JarMain {
      *  By default read config from current dir
      *
      * @param args cmd
+     * @throws java.io.IOException when the configuration file can't be found
      */
     public static void main(String[] args) throws IOException {
         if(args.length == 0){

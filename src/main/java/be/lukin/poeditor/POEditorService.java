@@ -217,6 +217,7 @@ public interface POEditorService {
      * @param token api key
      * @param projectId id of the project
      * @param data json string with a list of terms
+     * @return EditTermsResponse
      */
     @FormUrlEncoded
     @POST("/")
