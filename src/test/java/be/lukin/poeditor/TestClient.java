@@ -13,7 +13,9 @@ import retrofit.RestAdapter;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 import java.util.logging.Logger;
 
 import static org.junit.Assert.*;
@@ -218,5 +220,14 @@ public class TestClient {
         assertEquals(4, details.definitions.parsed);
         assertEquals(0, details.definitions.added);
         assertEquals(0, details.definitions.deleted);
+    }
+    
+    @Test
+    public void addComments(){
+        List<Comment> comments = new ArrayList<Comment>();
+        comments.add(new Comment("foobar", "Foo comment"));
+        comments.add(new Comment("test_mh", "Foo comment"));
+        CommentsDetails details = client.addComments(projectId, comments);
+        assertEquals(2, details.parsed);
     }
 }

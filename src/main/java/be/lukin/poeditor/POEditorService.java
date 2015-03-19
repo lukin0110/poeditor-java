@@ -194,6 +194,21 @@ public interface POEditorService {
             @Field("api_token") String token,
             @Field("id") String projectId, 
             @Field("language") String language);
-    
-    
+
+    /**
+     *
+     * @param action value must be view_terms
+     * @param token api key
+     * @param projectId id of the project
+     * @param data json string with a list of comments
+     * @return AddCommentsResponse
+     */
+    @FormUrlEncoded
+    @POST("/")
+    public AddCommentsResponse addComment(
+            @Field("action") String action,
+            @Field("api_token") String token,
+            @Field("id") String projectId,
+            @Field("data")String data    
+    );
 }

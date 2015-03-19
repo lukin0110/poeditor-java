@@ -39,6 +39,7 @@ public class POEditorClient {
         public static final String LIST_CONTRIBUTORS = "list_contributors";
         public static final String ADD_CONTRIBUTOR = "add_contributor";
         public static final String ADD_TERMS = "add_terms";
+        public static final String ADD_COMMENTS = "add_comment";
         public static final String DELETE_TERMS = "delete_terms";
         public static final String ADD_LANGUAGE = "add_language";
         public static final String DELETE_LANGUAGE = "delete_language";
@@ -313,6 +314,13 @@ public class POEditorClient {
         ViewTermsResponse response = service.viewProjectTerms(Action.VIEW_TERMS, apiKey, projectId, null);
         ApiUtils.checkResponse(response.response);
         return response.list;
+    }
+
+    public CommentsDetails addComments(String projectId, List<Comment> comments){
+        String jsonComments = new Gson().toJson(comments);
+        AddCommentsResponse response = service.addComment(Action.ADD_COMMENTS, apiKey, projectId, jsonComments);
+        ApiUtils.checkResponse(response.response);
+        return response.details;
     }
 
     @Override
