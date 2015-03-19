@@ -14,9 +14,10 @@ public class TestConfig {
     public void readInputStream() throws IOException {
         InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream("poeditor.properties");
         Config config = Config.load(is);
+
+        assertEquals("your api key here", config.getApiKey());
+        assertEquals("your project id here", config.getProjectId());
         
-        assertNotNull(config.getApiKey());
-        assertNotNull(config.getProjectId());
         assertNotNull(config.getTerms());
         assertEquals("android_strings", config.getType());
         assertEquals(3, config.getLanguageCount());
@@ -55,5 +56,4 @@ public class TestConfig {
         assertNotNull(config);
         assertEquals(1, config.getLanguageCount());
     }
-    
 }

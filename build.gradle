@@ -41,6 +41,12 @@ run {
     }
 }
 
+test {
+    systemProperties = System.properties
+    // This test doesn't run on Travis CI. Waiting for a decent stub
+    exclude 'be/lukin/poeditor/TestClient.class'
+}
+
 task javadocJar(type: Jar) {
     classifier = 'javadoc'
     from javadoc

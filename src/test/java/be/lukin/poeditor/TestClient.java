@@ -6,6 +6,7 @@ import be.lukin.poeditor.exceptions.PermissionDeniedException;
 import be.lukin.poeditor.models.*;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import retrofit.RestAdapter;
 
@@ -22,25 +23,14 @@ import static org.junit.Assert.*;
 public class TestClient {
 
     private POEditorClient client;
-    private String apiKey;
     private String projectId;
-    private Properties properties = new Properties();
 
     private static final Logger logger = Logger.getLogger(TestClient.class.getName());
-    
-    private String getProperty(String key){
-        String property = properties.getProperty(key);
-        if(property == null){
-            property = System.getenv(key);
-        }
-        return property;
-    }
-    
+
     @Before
     public void setUp() throws IOException {
-        //properties.load(Thread.currentThread().getContextClassLoader().getResourceAsStream("config.properties"));
-        apiKey = getProperty("poeditorApiKey");
-        projectId = getProperty("poeditorTestProjectId");
+        String apiKey = System.getProperty("tests.poeditor.apiKey");
+        projectId = System.getProperty("tests.poeditor.testProjectId");
 
         client = new POEditorClient(apiKey, POEditorClient.HOST, RestAdapter.LogLevel.FULL);
         logger.info("Client: " + client);
@@ -55,18 +45,27 @@ public class TestClient {
     
     @After
     public void tearDown(){
-        //client.deleteProjectLanguage(projectId, "fi");
+        try {
+            client.deleteProjectLanguage(projectId, "fi");
+        } catch(ApiException ae){
+            //pass
+        }
     }
     
+    @Ignore
+    @Test
+    public void createProject(){
+        Project project = client.createProject("Automobile");
+        assertEquals("Automobile", project.name);
+        assertEquals("0", project.isPublic);
+        assertEquals("0", project.open);
+    }
+    
+    @Ignore
     @Test
     public void listProjects(){
         List<Project> projects = client.getProjects();
         //assertEquals(4, projects.size());
-    }
-    
-    @Test
-    public void createProject(){
-        Project project = client.createProject("Automobile");
     }
     
     @Test 
@@ -79,12 +78,10 @@ public class TestClient {
         assertEquals(project.isPublic, "0");
         assertEquals(project.open, "0");
         
-        /*
-                System.out.println("Length: " + list.size());
-        System.out.println("Project: " + projectId);
-        //System.out.println("Languages: " + client.getProjectLanguages(projectId));
-        //System.out.println("Available: " + client.getAvailableLanguages());
-         */
+        List<Language> list1 = client.getProjectLanguages(projectId);
+        List<Language> list2 = client.getAvailableLanguages();
+        assertEquals(3, list1.size());
+        assertTrue(list2.size() > 0);
     }
 
     @Test(expected = PermissionDeniedException.class)
