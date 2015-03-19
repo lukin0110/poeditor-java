@@ -31,3 +31,15 @@ Publish:
 ```
 gradle publish
 ```
+
+Github tags
+-----------
+Create tag
+```
+git tag -a 0.3.1 -m '0.3.1'
+```
+
+Push tag:
+```
+git push origin --tags
+```
