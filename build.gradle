@@ -6,7 +6,7 @@ apply plugin: 'maven-publish'
 
 // Artifact settings
 group = 'be.lukin.poeditor'
-version = '0.2.0'
+version = '0.3.0'
 archivesBaseName = 'poeditor-client'
 
 // http://gradle.org/docs/current/userguide/application_plugin.html

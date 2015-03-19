@@ -46,6 +46,7 @@ public class POEditorClient {
         public static final String SET_REFERENCE_LANGUAGE = "set_reference_language";
         public static final String CLEAR_REFERENCE_LANGUAGE = "clear_reference_language";
         public static final String EXPORT = "export";
+        public static final String SYNC_TERMS = "sync_terms";
     }
 
     private static final Logger LOG = Logger.getLogger(POEditorClient.class.getName());
@@ -323,6 +324,21 @@ public class POEditorClient {
         return response.details;
     }
 
+    /**
+     * syncs your project with the array you send (terms that are not found in the JSON object will be deleted from 
+     * project and the new ones added).
+     *
+     * @param projectId id of the project
+     * @param terms list of terms
+     * @return TermsDetails
+     */
+    public TermsDetails syncTerms(String projectId, List<Term> terms){
+        String jsonTerms = new Gson().toJson(terms);
+        EditTermsResponse response = service.syncTerms(Action.SYNC_TERMS, apiKey, projectId, jsonTerms);
+        ApiUtils.checkResponse(response.response);
+        return response.details;
+    }
+    
     @Override
     public String toString() {
         return "POEditorClient{" +

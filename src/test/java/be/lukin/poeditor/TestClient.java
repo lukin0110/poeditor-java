@@ -230,4 +230,15 @@ public class TestClient {
         CommentsDetails details = client.addComments(projectId, comments);
         assertEquals(2, details.parsed);
     }
+    
+    @Test
+    public void syncTerms(){
+        List<Term> terms = new ArrayList<Term>();
+        terms.add(new Term("foobar"));
+        terms.add(new Term("test_mh"));
+        
+        TermsDetails details = client.syncTerms(projectId, terms);
+        logger.info("Sync result: " +details);
+        assertEquals(2, details.parsed);
+    }
 }
