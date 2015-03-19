@@ -15,12 +15,32 @@ Download [the latest JAR][2] or grab via Maven:
 <dependency>
   <groupId>be.lukin.poeditor</groupId>
   <artifactId>poeditor-client</artifactId>
-  <version>0.2.0</version>
+  <version>0.3.0</version>
 </dependency>
 ```
 or gradle:
 ```groovy
-compile 'be.lukin.poeditor:poeditor-java:0.2.0'
+compile 'be.lukin.poeditor:poeditor-java:0.3.0'
+```
+
+Usage
+-----
+```java
+// Create a client with your api key
+POEditorClient client = new POEditorClient("your api key");
+
+// Fetch project details
+Project project = client.client.getProject("your project Id");
+
+// Download a translation for Android
+File french = client.export("your project Id", "fr", FileTypeEnum.APPLE_STRINGS, null);
+
+// Upload a language and do not overwrite existing translations, only a new translations
+File dutch = new File("./android.xml");
+UploadDetails details1 = client.uploadLanguage("your project Id", dutch, "nl", false);
+
+// Upload terms
+UploadDetails details2 = client.uploadTerms("your project Id", dutch);
 ```
 
 License
@@ -41,4 +61,4 @@ License
     limitations under the License.
 
  [1]: https://poeditor.com/api_reference/
- [2]: http://search.maven.org/remotecontent?filepath=be/lukin/poeditor/poeditor-client/0.1.1/poeditor-client-0.1.1.jar
+ [2]: http://search.maven.org/remotecontent?filepath=be/lukin/poeditor/poeditor-client/0.3.0/poeditor-client-0.3.0.jar
