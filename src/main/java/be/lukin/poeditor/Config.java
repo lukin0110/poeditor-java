@@ -12,6 +12,10 @@ public class Config {
     private String type;
     private String terms;
     private Map<String, String> translations = new HashMap<String, String>();
+    private String[] tagsAll;
+    private String[] tagsNew;
+    private String[] tagsObsolete;
+    private String[] tagsPull;
 
     public Config() {
     }
@@ -22,6 +26,18 @@ public class Config {
         this.type = type;
         this.terms = terms;
         this.translations = translations;
+    }
+
+    public Config(String apiKey, String projectId, String type, String terms, Map<String, String> translations, String[] tagsAll, String[] tagsNew, String[] tagsObsolete, String[] tagsPull) {
+        this.apiKey = apiKey;
+        this.projectId = projectId;
+        this.type = type;
+        this.terms = terms;
+        this.translations = translations;
+        this.tagsAll = tagsAll;
+        this.tagsNew = tagsNew;
+        this.tagsObsolete = tagsObsolete;
+        this.tagsPull = tagsPull;
     }
 
     public String getApiKey() {
@@ -50,6 +66,22 @@ public class Config {
     
     public Set<String> getLanguageKeys(){
         return this.translations.keySet();
+    }
+
+    public String[] getTagsAll() {
+        return tagsAll;
+    }
+
+    public String[] getTagsNew() {
+        return tagsNew;
+    }
+
+    public String[] getTagsObsolete() {
+        return tagsObsolete;
+    }
+
+    public String[] getTagsPull() {
+        return tagsPull;
     }
 
     @Override

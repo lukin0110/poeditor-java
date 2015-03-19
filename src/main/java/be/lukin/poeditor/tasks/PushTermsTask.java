@@ -15,7 +15,7 @@ public class PushTermsTask extends BaseTask {
         if(config.getTerms() != null) {
             Path current = Paths.get("");
             File termsFile = new File(current.toAbsolutePath().toString(), config.getTerms());
-            UploadDetails details = client.uploadTerms(config.getProjectId(), termsFile);
+            UploadDetails details = client.uploadTerms(config.getProjectId(), termsFile, config.getTagsAll(), config.getTagsNew(), config.getTagsObsolete());
             System.out.println("Synced: " + details);
         } else {
             System.out.println("No terms defined");

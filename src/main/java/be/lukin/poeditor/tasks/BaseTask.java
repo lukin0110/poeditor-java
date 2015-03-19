@@ -7,9 +7,10 @@ public abstract class BaseTask {
     Config config;
     POEditorClient client;
 
-    public void configure(Config config){
+    public BaseTask configure(Config config){
         this.config = config;
         this.client = new POEditorClient(config.getApiKey());
+        return this;
     }
     
     public abstract void handle();

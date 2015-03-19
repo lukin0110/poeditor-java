@@ -24,7 +24,7 @@ public class PullTask extends BaseTask {
             String path = config.getLanguage(languageKey);
             File exportFile = new File(current.toAbsolutePath().toString(), path);
             exportFile.getParentFile().mkdirs();
-            File f = client.export(config.getProjectId(), languageKey, fte, null, exportFile, null);
+            File f = client.export(config.getProjectId(), languageKey, fte, null, exportFile, config.getTagsPull());
             System.out.println(" - Trans " + languageKey + ": " + path);
         }
     }
