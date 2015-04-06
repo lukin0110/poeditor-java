@@ -4,9 +4,13 @@ apply plugin: 'maven'
 apply plugin: 'signing'
 apply plugin: 'maven-publish'
 
+// Java Settings
+sourceCompatibility = 1.7
+targetCompatibility = 1.7
+
 // Artifact settings
 group = 'be.lukin.poeditor'
-version = '0.3.1'
+version = '0.3.2'
 archivesBaseName = 'poeditor-client'
 
 // http://gradle.org/docs/current/userguide/application_plugin.html
