@@ -12,6 +12,7 @@ public class Config {
     private String type;
     private String terms;
     private Map<String, String> translations = new HashMap<String, String>();
+    private Map<String, String> filters = new HashMap<String, String>();    // Filters are stored per language
     private String[] tagsAll;
     private String[] tagsNew;
     private String[] tagsObsolete;
@@ -28,12 +29,22 @@ public class Config {
         this.translations = translations;
     }
 
-    public Config(String apiKey, String projectId, String type, String terms, Map<String, String> translations, String[] tagsAll, String[] tagsNew, String[] tagsObsolete, String[] tagsPull) {
+    public Config(String apiKey, 
+                  String projectId, 
+                  String type, 
+                  String terms, 
+                  Map<String, String> translations, 
+                  Map<String, String> filters, 
+                  String[] tagsAll, 
+                  String[] tagsNew, 
+                  String[] tagsObsolete, 
+                  String[] tagsPull) {
         this.apiKey = apiKey;
         this.projectId = projectId;
         this.type = type;
         this.terms = terms;
         this.translations = translations;
+        this.filters = filters;
         this.tagsAll = tagsAll;
         this.tagsNew = tagsNew;
         this.tagsObsolete = tagsObsolete;
@@ -68,6 +79,17 @@ public class Config {
         return this.translations.keySet();
     }
 
+    public FilterByEnum[] getFilters(String language){
+        String f = this.filters.get(language);
+        
+        if(f != null){
+            String[] array = f.split(",");    
+            return FilterByEnum.toArray(array);
+        }
+        
+        return null;
+    }
+    
     public String[] getTagsAll() {
         return tagsAll;
     }
@@ -116,13 +138,25 @@ public class Config {
         config.type = properties.getProperty("poeditor.type");
         Objects.requireNonNull(config.type, "'poeditor.type' is required");
         config.terms = properties.getProperty("poeditor.terms");
+
+        String f = properties.getProperty("poeditor.filters");
+        if(f != null){
+            //config.filters = f.split(",");
+        }
         
         for(String key : properties.stringPropertyNames()){
+
+            // Fetch translation files
             if(key.startsWith("poeditor.trans.")){
                 config.translations.put(key.substring(15), properties.getProperty(key));
             }
+            
+            // Fetch filters
+            if(key.startsWith("poeditor.filters.")){
+                config.filters.put(key.substring(17), properties.getProperty(key));
+            }
         }
-        
+
         if(config.translations.size() == 0){
             throw new RuntimeException("No languages detected, you should provide at least on 'poeditor.trans.<lang> key'");
         }

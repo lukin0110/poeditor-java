@@ -2,11 +2,14 @@ package be.lukin.poeditor.tasks;
 
 import be.lukin.poeditor.Config;
 import be.lukin.poeditor.FileTypeEnum;
+import be.lukin.poeditor.FilterByEnum;
 import be.lukin.poeditor.models.Project;
 
 import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
+import java.util.List;
 
 public class PullTask extends BaseTask {
     
@@ -24,8 +27,11 @@ public class PullTask extends BaseTask {
             String path = config.getLanguage(languageKey);
             File exportFile = new File(current.toAbsolutePath().toString(), path);
             exportFile.getParentFile().mkdirs();
-            File f = client.export(config.getProjectId(), languageKey, fte, null, exportFile, config.getTagsPull());
+            FilterByEnum[] filters = config.getFilters(languageKey);
+
+            File f = client.export(config.getProjectId(), languageKey, fte, filters, exportFile, config.getTagsPull());
             System.out.println(" - Trans " + languageKey + ": " + path);
+            System.out.println(" - Filters " + languageKey + ": " + Arrays.toString(filters) + "\n");
         }
     }
 }

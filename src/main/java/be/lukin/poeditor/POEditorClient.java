@@ -12,6 +12,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
@@ -245,19 +246,21 @@ public class POEditorClient {
         FileExport fe = service.export(Action.EXPORT, apiKey, projectId, language, fte.name().toLowerCase(), FilterByEnum.toStringArray(filters), tagsStr);
 
         try {
-            if(exportFile != null){
+            if (exportFile != null) {
                 exportFile.createNewFile();
             } else {
                 exportFile = File.createTempFile("poeditor-export-file-", ".tmp");
             }
-            
-            URL website = new URL(fe.item);
-            ReadableByteChannel rbc = Channels.newChannel(website.openStream());
-            
-            FileOutputStream fos = new FileOutputStream(exportFile);
-            fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
-            return exportFile;
-            
+
+            if(fe.item != null) {
+                URL website = new URL(fe.item);
+                ReadableByteChannel rbc = Channels.newChannel(website.openStream());
+
+                FileOutputStream fos = new FileOutputStream(exportFile);
+                fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
+                return exportFile;
+            }
+
         } catch (FileNotFoundException e) {
             LOG.log(Level.SEVERE, e.toString(), e);
         } catch (IOException e) {
