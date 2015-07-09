@@ -4,7 +4,7 @@ Upload
 Create and publish the archive: http://gradle.org/docs/current/userguide/artifact_management.html
 
 ```
-gradle uploadArchives
+gradle uploadArchives -Premote
 ```
 This will build, sign and upload the archive.
 
