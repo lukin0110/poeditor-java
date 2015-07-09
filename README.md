@@ -15,12 +15,12 @@ Download [the latest JAR][2] or grab via Maven:
 <dependency>
   <groupId>be.lukin.poeditor</groupId>
   <artifactId>poeditor-client</artifactId>
-  <version>0.3.1</version>
+  <version>0.3.3</version>
 </dependency>
 ```
 or gradle:
 ```groovy
-compile 'be.lukin.poeditor:poeditor-java:0.3.1'
+compile 'be.lukin.poeditor:poeditor-java:0.3.3'
 ```
 
 Usage
