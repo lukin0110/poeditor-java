@@ -28,7 +28,7 @@ public class PushTask extends BaseTask {
         }
 
         boolean first = true;
-        
+
         for(String lang : config.getLanguageKeys()){
             if(languages != null && !languages.contains(lang)){
                 continue;

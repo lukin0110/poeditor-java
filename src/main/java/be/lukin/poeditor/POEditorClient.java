@@ -303,11 +303,16 @@ public class POEditorClient {
         return ur.details;
     }
     
-    public UploadDetails uploadLanguage(String projectId, File translationFile, String language, boolean overwrite){
+    public UploadDetails uploadLanguage(String projectId, File translationFile, final String language, boolean overwrite){
         TypedFile typedFile = new TypedFile("application/xml", translationFile);
         String _overwrite = overwrite ? "1" : "0";
         UploadResponse ur = service.upload("upload", apiKey, projectId, "definitions", typedFile, language, _overwrite, null);
-        ApiUtils.checkResponse(ur.response);
+        
+        Map<String, String> context = new HashMap<String, String>(){{
+            put("lang", language);
+        }};
+        
+        ApiUtils.checkResponse(ur.response, context);
         return ur.details;
     }
     
