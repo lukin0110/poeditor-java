@@ -11,7 +11,6 @@ public class PushTask extends BaseTask {
 
     @Override
     public void handle() {
-        // params init
         System.out.println("Uploading translations");
         Config config = super.config;
         Path current = Paths.get("");
